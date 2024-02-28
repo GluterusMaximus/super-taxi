@@ -4,7 +4,10 @@ import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <header>
+  <v-btn>
+    Button
+  </v-btn>
+  <!-- <header>
     <img
       alt="Vue logo"
       class="logo"
@@ -27,7 +30,7 @@ import HelloWorld from './components/HelloWorld.vue'
     </div>
   </header>
 
-  <RouterView />
+  <RouterView /> -->
 </template>
 
 <style scoped>
