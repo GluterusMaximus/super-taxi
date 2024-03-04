@@ -1,5 +1,3 @@
-import './assets/main.css'
-
 import { type Component, createApp } from 'vue'
 import { createPinia } from 'pinia'
 

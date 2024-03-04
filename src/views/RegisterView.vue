@@ -3,6 +3,6 @@
 
 <template>
   <main>
-    <div>CREATE TRIP</div>
+    <div>REGISTER</div>
   </main>
 </template>

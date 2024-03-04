@@ -4,4 +4,7 @@ export default antfu({
   typescript: {
     tsconfigPath: './tsconfig.json',
   },
+  rules: {
+    curly: ['error', 'all'],
+  },
 })
