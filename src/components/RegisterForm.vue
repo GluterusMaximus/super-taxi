@@ -2,15 +2,23 @@
 import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { emailRule, requiredRule } from '@/helpers/rules'
+import { Role } from '@/types/role'
 
 const password = ref('')
 const isPasswordVisible = ref(false)
+const repeatPassword = ref('')
+const isRepeatPasswordVisible = ref(false)
 const email = ref('')
+const role = ref<Role | null>(null)
 
-const isLoginDisabled = computed(() =>
+const passwordMatchRule = computed(() => password.value === repeatPassword.value || 'Passwords must match')
+const isRegisterDisabled = computed(() =>
   !email.value
   || !password.value
-  || (emailRule(email.value) !== true))
+  || !repeatPassword.value
+  || (emailRule(email.value) !== true)
+  || (passwordMatchRule.value !== true)
+  || !role.value)
 </script>
 
 <template>
@@ -28,7 +36,7 @@ const isLoginDisabled = computed(() =>
       rounded="lg"
     >
       <div class="text-subtitle-1 text-medium-emphasis">
-        Account
+        Register
       </div>
 
       <v-text-field
@@ -39,6 +47,26 @@ const isLoginDisabled = computed(() =>
         prepend-inner-icon="mdi-email-outline"
         variant="outlined"
       />
+
+      <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between mb-2">
+        Choose your role
+      </div>
+
+      <v-btn-toggle
+        v-model="role"
+        color="#1155DC"
+        rounded="0"
+        class="mb-5 d-flex justify-center"
+        group
+      >
+        <v-btn :value="Role.Passenger">
+          Passenger
+        </v-btn>
+
+        <v-btn :value="Role.Driver">
+          Driver
+        </v-btn>
+      </v-btn-toggle>
 
       <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
         Password
@@ -56,23 +84,39 @@ const isLoginDisabled = computed(() =>
         @click:append-inner="isPasswordVisible = !isPasswordVisible"
       />
 
+      <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
+        Repeat password
+      </div>
+
+      <v-text-field
+        v-model="repeatPassword"
+        :append-inner-icon="isRepeatPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        :type="isRepeatPasswordVisible ? 'text' : 'password'"
+        :rules="[requiredRule, passwordMatchRule]"
+        density="compact"
+        placeholder="Repeat your password"
+        prepend-inner-icon="mdi-repeat"
+        variant="outlined"
+        @click:append-inner="isRepeatPasswordVisible = !isRepeatPasswordVisible"
+      />
+
       <v-btn
         class="mb-5"
         color="blue"
         size="large"
         variant="tonal"
-        :disabled="isLoginDisabled"
+        :disabled="isRegisterDisabled"
         block
       >
-        Log In
+        Register
       </v-btn>
 
       <v-card-text class="text-center">
         <RouterLink
           class="text-blue text-decoration-none"
-          to="/register"
+          to="/login"
         >
-          Don't have an account? Register
+          Already have an account? Log in
         </RouterLink>
       </v-card-text>
     </v-card>
