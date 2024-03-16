@@ -2,15 +2,37 @@
 import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { emailRule, requiredRule } from '@/helpers/rules'
+import { loginUser } from '@/api'
+import router from '@/router'
+import { useUserStore } from '@/stores/user'
 
 const password = ref('')
 const isPasswordVisible = ref(false)
 const email = ref('')
+const loginError = ref<null | Error>(null)
 
 const isLoginDisabled = computed(() =>
   !email.value
   || !password.value
   || (emailRule(email.value) !== true))
+
+const { setUser } = useUserStore()
+
+async function login(): Promise<void> {
+  try {
+    const user = await loginUser({
+      email: email.value,
+      password: password.value,
+    })
+
+    setUser(user)
+
+    router.push('/')
+  }
+  catch (error) {
+    loginError.value = error as Error
+  }
+}
 </script>
 
 <template>
@@ -25,10 +47,11 @@ const isLoginDisabled = computed(() =>
       class="mx-auto pa-12 pb-8"
       elevation="8"
       max-width="448"
+      title="Log in"
       rounded="lg"
     >
       <div class="text-subtitle-1 text-medium-emphasis">
-        Account
+        Email
       </div>
 
       <v-text-field
@@ -63,9 +86,12 @@ const isLoginDisabled = computed(() =>
         variant="tonal"
         :disabled="isLoginDisabled"
         block
+        @click="login"
       >
         Log In
       </v-btn>
+
+      <v-alert v-if="loginError" :text="loginError.message" type="error" />
 
       <v-card-text class="text-center">
         <RouterLink

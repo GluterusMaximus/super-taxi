@@ -3,22 +3,52 @@ import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { emailRule, requiredRule } from '@/helpers/rules'
 import { Role } from '@/types/role'
+import { createUser } from '@/api'
+import router from '@/router'
+import { useUserStore } from '@/stores/user'
 
 const password = ref('')
 const isPasswordVisible = ref(false)
 const repeatPassword = ref('')
 const isRepeatPasswordVisible = ref(false)
 const email = ref('')
+const name = ref('')
 const role = ref<Role | null>(null)
+const registrationError = ref<null | Error>(null)
 
 const passwordMatchRule = computed(() => password.value === repeatPassword.value || 'Passwords must match')
 const isRegisterDisabled = computed(() =>
   !email.value
+  || !name.value
   || !password.value
   || !repeatPassword.value
   || (emailRule(email.value) !== true)
   || (passwordMatchRule.value !== true)
   || !role.value)
+
+const { setUser } = useUserStore()
+
+async function register(): Promise<void> {
+  if (role.value === null) {
+    return
+  }
+
+  try {
+    const user = await createUser({
+      name: name.value,
+      role: role.value,
+      email: email.value,
+      password: password.value,
+    })
+
+    setUser(user)
+
+    router.push('/')
+  }
+  catch (error) {
+    registrationError.value = error as Error
+  }
+}
 </script>
 
 <template>
@@ -34,9 +64,10 @@ const isRegisterDisabled = computed(() =>
       elevation="8"
       max-width="448"
       rounded="lg"
+      title="Register"
     >
       <div class="text-subtitle-1 text-medium-emphasis">
-        Register
+        Email
       </div>
 
       <v-text-field
@@ -45,6 +76,19 @@ const isRegisterDisabled = computed(() =>
         density="compact"
         placeholder="Email address"
         prepend-inner-icon="mdi-email-outline"
+        variant="outlined"
+      />
+
+      <div class="text-subtitle-1 text-medium-emphasis">
+        Name
+      </div>
+
+      <v-text-field
+        v-model="name"
+        :rules="[requiredRule]"
+        density="compact"
+        placeholder="Your name"
+        prepend-inner-icon="mdi-face-man"
         variant="outlined"
       />
 
@@ -107,9 +151,12 @@ const isRegisterDisabled = computed(() =>
         variant="tonal"
         :disabled="isRegisterDisabled"
         block
+        @click="register"
       >
         Register
       </v-btn>
+
+      <v-alert v-if="registrationError" :text="registrationError.message" type="error" />
 
       <v-card-text class="text-center">
         <RouterLink
