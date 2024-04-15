@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Map from '@/components/Map.vue'
 import router from '@/router'
 import { useUserStore } from '@/stores/user'
 
@@ -13,6 +14,7 @@ function logout() {
 <template>
   <main>
     <div>CREATE TRIP</div>
+    <Map />
     <button @click="logout">
       Log out
     </button>

@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@fawmi/vue-google-maps':
+    specifier: 0.9.67
+    version: 0.9.67
   axios:
     specifier: ^1.6.8
     version: 1.6.8
@@ -451,6 +454,17 @@ packages:
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
+
+  /@fawmi/vue-google-maps@0.9.67:
+    resolution: {integrity: sha512-Ji9SiQIdg8mRLAyp0B9P3dU6EUptdrU4hDgkvelpNpWWmtEtj/bGgQvrZlJUBEBRUQhPDnkduIdKnXAvSV57Pg==}
+    dependencies:
+      '@googlemaps/markerclustererplus': 1.2.10
+    dev: false
+
+  /@googlemaps/markerclustererplus@1.2.10:
+    resolution: {integrity: sha512-HY4ev+D3kO1+9oQjtKTojxVtJIS/kSWJfry6cpKoXC97kBQc5Vguqu5x6pLnh+70N0Au+16Yl7iu4LZaIOTstw==}
+    deprecated: It is recommended to use @googlemaps/markerclusterer instead of this package.
+    dev: false
 
   /@humanwhocodes/config-array@0.11.14:
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
